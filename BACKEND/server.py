@@ -11,13 +11,9 @@ app = Flask(__name__, template_folder="../FRONTEND/templates", static_folder="..
 def index():
     return render_template("index.html")
 
-@app.route("/get_data", methods=["GET"])
-def get_data():
-    type = request.args.get("type")
-    if type in type_map:
-        return jsonify(_handler.get_data(type_map[type]))
-    else:
-        return jsonify({"error": "Invalid type"})
+@app.route("/seismic_data", methods=['GET'])
+def seismic_data():
+    return jsonify(_mailman.seismicData())
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
