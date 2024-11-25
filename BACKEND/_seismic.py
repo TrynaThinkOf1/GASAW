@@ -3,33 +3,41 @@ from obspy.clients.fdsn import Client
 import cartopy.crs as ccrs
 import cartopy.feature as cfeat
 
+from time import sleep
 import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 client = Client("IRIS")
 
-DATA = {}
+eventData = {}
 
 def main():
-    fetch()
-    plot()
+    while True:
+        fetch()
+        plot()
+        sleep(300)
 
-def fetch():
-    limit = int(input("How many stations should be fetched? (number ^ = time ^)\n"))
+def fetch(min_mag=5.0):
+    global eventData
 
-    inventory = client.get_stations(network="IU", level="station")
+    try:
+        catalog = client.get_events(starttime="2024-11-24", minmagnitude=min_mag)
+        for event in catalog:
+            origin = event.origins[0]
+            magnitude = event.magnitudes[0].mag
+            latitude = origin.latitude
+            longitude = origin.longitude
 
-    count = 0
-    for network in inventory:
-        for station in network.stations:
-            if count >= limit:
-                break
-            name = station.code
-            latitude = station.latitude
-            longitude = station.longitude
-            DATA[name] = [longitude, latitude]
-
-            count += 1
+            event_id = event.resource_id.id
+            if event_id not in eventData:
+                eventData[event_id] = {
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "magnitude": magnitude,
+                }
+                print(f"New event: Mag {magnitude} at ({latitude}, {longitude})")
+    except Exception as e:
+        raise Exception(e)
 
 def plot():
     plt.figure(figsize=(12, 8))
@@ -41,13 +49,13 @@ def plot():
     ax.add_feature(cfeat.BORDERS, linestyle=':')
     ax.gridlines(draw_labels=True)
 
-    for name, (lon, lat) in DATA.items():
-        plt.plot(lon, lat, 'go', transform=ccrs.PlateCarree(), label=name)
+    for event_id, event in eventData.items():
+        lat, lon, mag = event["latitude"], event["longitude"], event["magnitude"]
+        plt.plot(lon, lat, 'ro', transform=ccrs.PlateCarree())
+        plt.text(lon + 1, lat + 1, f"Mag {mag:.1f}", color="red", fontsize=9,
+                 transform=ccrs.PlateCarree())
 
-    if len(DATA) <= 20:  # Avoid overcrowding if too many stations
-        plt.legend(loc='lower left', fontsize='small')
-
-    plt.title("World Map with Points: " + (', '.join([i for i in DATA])))
+    plt.title("Seismic Activity Map")
     plt.show()
 
 
