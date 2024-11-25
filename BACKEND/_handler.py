@@ -10,6 +10,9 @@ import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
+names = []
+DATA = {}
+
 def get_data(type=0):
     data_combinations = [
         (seis, temp, prec),
@@ -27,28 +30,40 @@ def get_data(type=0):
     else:
         raise ValueError("Invalid type")
 
-atl_lat, atl_lon = 33.749, -84.388
-mos_lat, mos_lon = 55.756, 37.617
-syd_lat, syd_lon = -33.869, 151.209
+def main():
+    while True:
+        city = input("Enter city name and coords(or done): ")
 
-# Create a figure
-plt.figure(figsize=(12, 8))
+        if city.lower() == "done":
+            break
 
-# Define the projection (Plate Carrée is commonly used for global maps)
-ax = plt.axes(projection=ccrs.PlateCarree())
+        city_data = city.split(',')
 
-# Add features to the map
-ax.add_feature(cfeat.COASTLINE)
-ax.add_feature(cfeat.BORDERS, linestyle=':')
+        if len(city_data) == 3:
+            city_name = city_data[0].strip()
+            try:
+                lon = float(city_data[1].strip())
+                lat = float(city_data[2].strip())
+                names.append(city_name)
+                DATA[city_name] = [lon, lat]
+            except ValueError:
+                print("Invalid coordinates")
+                continue
 
-# Add a grid for reference
-ax.gridlines(draw_labels=True)
+        else:
+            print("please enter the city name and coords in the format: 'City Name, Longitude, Latitude'")
 
-# Plot Atlanta
-plt.plot(atl_lon, atl_lat, 'ro', transform=ccrs.PlateCarree(), label="Atlanta (33.749, -84.388)")
-plt.plot(mos_lon, mos_lat, 'bo', transform=ccrs.PlateCarree(), label="Moscow (55.756, 37.617)")
-plt.plot(syd_lon, syd_lat, 'go', transform=ccrs.PlateCarree(), label="Sydney (-33.869, 151.209)")
+    plt.figure(figsize=(12, 8))
+    ax = plt.axes(projection=ccrs.PlateCarree())
+    ax.add_feature(cfeat.COASTLINE)
+    ax.add_feature(cfeat.BORDERS, linestyle=':')
+    ax.gridlines(draw_labels=True)
 
-# Show the map
-plt.title("World Map with Points: Atlanta, Moscow, Syndey")
-plt.show()
+    for lon, lat in DATA.values():
+        plt.plot(lon, lat, 'go', transform=ccrs.PlateCarree())
+
+    plt.title("World Map with Points: " + (', '.join([i for i in names])))
+    plt.show()
+
+if __name__ == "__main__":
+    main()
