@@ -5,14 +5,22 @@ import cartopy.feature as cfeat
 from datetime import datetime, timedelta
 from io import BytesIO
 from threading import Thread
-
 from time import sleep
 import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
-client = Client("IRIS")
+
+clients = [
+    Client("IRIS"),
+    Client("USGS"),
+    Client("EMSC"),
+    Client("GEOFON"),
+    Client("GEONET"),
+    Client("RESIF"),
+]
 
 eventData = {}
+
 
 def main(min_mag=3.0, measure_period=(datetime.utcnow() - timedelta(minutes=300))):
     while True:
@@ -23,36 +31,40 @@ def main(min_mag=3.0, measure_period=(datetime.utcnow() - timedelta(minutes=300)
 
         return img
 
+
 def this_is_a_stupid_function():
     while True:
         sleep(30)
         fetch()
         plot()
 
+
 def fetch(min_mag=3.0, measure_period=(datetime.utcnow() - timedelta(minutes=300))):
     global eventData
 
     temp = timedelta(minutes=measure_period)
-
     measure_period = datetime.utcnow() - temp
 
-    try:
-        catalog = client.get_events(starttime=measure_period, minmagnitude=min_mag)
-        for event in catalog:
-            origin = event.origins[0]
-            magnitude = event.magnitudes[0].mag
-            latitude = origin.latitude
-            longitude = origin.longitude
+    for client in clients:
+        try:
+            catalog = client.get_events(starttime=measure_period, minmagnitude=min_mag)
+            for event in catalog:
+                origin = event.origins[0]
+                magnitude = event.magnitudes[0].mag
+                latitude = origin.latitude
+                longitude = origin.longitude
 
-            event_id = event.resource_id.id
-            if event_id not in eventData:
-                eventData[event_id] = {
-                    "latitude": latitude,
-                    "longitude": longitude,
-                    "magnitude": magnitude,
-                }
-    except Exception as e:
-        raise Exception(e)
+                event_id = event.resource_id.id
+                if event_id not in eventData:
+                    eventData[event_id] = {
+                        "latitude": latitude,
+                        "longitude": longitude,
+                        "magnitude": magnitude,
+                        "source": client.base_url,
+                    }
+        except Exception as e:
+            print(f"Error with {client.base_url}: {e}")
+
 
 def plot():
     plt.figure(figsize=(12, 8))
