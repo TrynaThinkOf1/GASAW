@@ -1,10 +1,8 @@
-import time
-
 import matplotlib.pyplot as plt
 from obspy.clients.fdsn import Client
 import cartopy.crs as ccrs
 import cartopy.feature as cfeat
-from datetime import date
+from datetime import datetime, timedelta
 from io import BytesIO
 from threading import Thread
 
@@ -13,6 +11,9 @@ import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 client = Client("IRIS")
+
+current_time = datetime.utcnow()
+start_time = current_time - timedelta(minutes=120)
 
 eventData = {}
 
@@ -35,7 +36,7 @@ def fetch(min_mag=3.0):
     global eventData
 
     try:
-        catalog = client.get_events(starttime=date.today(), minmagnitude=min_mag)
+        catalog = client.get_events(starttime=start_time, minmagnitude=min_mag)
         for event in catalog:
             origin = event.origins[0]
             magnitude = event.magnitudes[0].mag

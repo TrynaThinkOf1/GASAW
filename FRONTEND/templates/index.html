@@ -3,12 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Main Page</title>
-    <link rel="stylesheet" href="static/style.css">
     <script defer src="static/script.js"></script>
 </head>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #0d1b2a;
+        color: #e0e1dd;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 1.2rem;
+    }
+    h1 {
+        margin-top: 50px;
+        font-size: 3rem;
+    }
+    .btn {
+        margin-top: 20px;
+        padding: 15px 30px;
+        font-size: 1.5rem;
+        color: #0d1b2a;
+        background-color: #4ecdc4;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #03ce23;
+        color: #e0e1dd;
+    }
+</style>
 <body>
-    <a href="/seismic">
-        <button id="seismic">World Seismic Graph</button>
-    </a>
+<h1>Welcome to TerraMetrics</h1>
+<a href="/seismic" class="btn" id="seismic_button">World Seismic Activity Map</a>
 </body>
 </html>

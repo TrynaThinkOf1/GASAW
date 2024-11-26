@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Seismic Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="/FRONTEND/static/script.js"></script>
 </head>
 <style>
     body, html {
@@ -13,40 +14,36 @@
     }
 
     img {
-        width: 100%;
+        width: 80%;
         height: 100%;
         object-fit: cover;
-        display: block;    /* Removes extra spacing around the image */
+        display: block;
     }
+
     .loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5em;
-    color: gray;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5em;
+        color: gray;
+    }
+
+    .data {
+        top: 10px;
+        left: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+        font-size: 1.2em;
+        max-height: 400px;
+        overflow-y: auto;
     }
 </style>
 <body>
-    <img src="/seismic_plot" alt="Seismic Map">
-
-    <script>
-        function refreshSeismicMap() {
-            const img = document.querySelector("img");
-            const loadingIndicator = document.createElement("div");
-            loadingIndicator.textContent = "Loading...";
-            loadingIndicator.className = "loading";
-            document.body.appendChild(loadingIndicator);
-
-            img.onload = () => {
-                document.body.removeChild(loadingIndicator);
-            };
-
-            const baseUrl = "/seismic_plot";
-            img.src = `${baseUrl}?nocache=${Date.now()}`;
-        }
-
-        setInterval(refreshSeismicMap, 30000);
-    </script>
+<img src="/seismic_plot" alt="Seismic Map">
+<p>Events:</p>
+<p id="event_list"></p>
 </body>
 </html>
