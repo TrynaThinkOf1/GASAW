@@ -1,9 +1,12 @@
+import time
+
 import matplotlib.pyplot as plt
 from obspy.clients.fdsn import Client
 import cartopy.crs as ccrs
 import cartopy.feature as cfeat
 from datetime import date
 from io import BytesIO
+from threading import Thread
 
 from time import sleep
 import ssl
@@ -16,8 +19,17 @@ eventData = {}
 def main():
     while True:
         fetch()
-        plot()
+        img = plot()
+
+        Thread(target=this_is_a_stupid_function, daemon=True).start()
+
+        return img
+
+def this_is_a_stupid_function():
+    while True:
         sleep(30)
+        fetch()
+        plot()
 
 def fetch(min_mag=3.0):
     global eventData
@@ -37,7 +49,6 @@ def fetch(min_mag=3.0):
                     "longitude": longitude,
                     "magnitude": magnitude,
                 }
-                print(f"New event: Mag {magnitude} at ({latitude}, {longitude})")
     except Exception as e:
         raise Exception(e)
 

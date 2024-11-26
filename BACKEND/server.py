@@ -13,7 +13,6 @@ def index():
 
 @app.route("/seismic_plot", methods=['GET'])
 def seismic_plot():
-    _mailman.seismicMain()
     plot_img = _mailman.getSeismicPlot()
     return send_file(plot_img, mimetype='image/png')
 
