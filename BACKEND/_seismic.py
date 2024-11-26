@@ -12,14 +12,11 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 client = Client("IRIS")
 
-current_time = datetime.utcnow()
-start_time = current_time - timedelta(minutes=120)
-
 eventData = {}
 
-def main():
+def main(min_mag=3.0, measure_period=(datetime.utcnow() - timedelta(minutes=300))):
     while True:
-        fetch()
+        fetch(min_mag, measure_period)
         img = plot()
 
         Thread(target=this_is_a_stupid_function, daemon=True).start()
@@ -32,11 +29,15 @@ def this_is_a_stupid_function():
         fetch()
         plot()
 
-def fetch(min_mag=3.0):
+def fetch(min_mag=3.0, measure_period=(datetime.utcnow() - timedelta(minutes=300))):
     global eventData
 
+    temp = timedelta(minutes=measure_period)
+
+    measure_period = datetime.utcnow() - temp
+
     try:
-        catalog = client.get_events(starttime=start_time, minmagnitude=min_mag)
+        catalog = client.get_events(starttime=measure_period, minmagnitude=min_mag)
         for event in catalog:
             origin = event.origins[0]
             magnitude = event.magnitudes[0].mag
@@ -81,3 +82,4 @@ def plot():
 
 if __name__ == "__main__":
     main()
+    plt.show()

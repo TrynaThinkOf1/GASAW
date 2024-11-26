@@ -42,7 +42,14 @@
     }
 </style>
 <body>
-<img src="/seismic_plot" alt="Seismic Map">
+<form action="/get_seismic_plot" method="get" id="seismic_form">
+    <label>Minimum Magnitude: </label>
+    <input type="number" name="min_magnitude">
+    <label>Measure Period (minutes):</label>
+    <input type="number" name="measure_period">
+    <input type="submit" value="Submit">
+</form>
+<img src="/view_seismic_plot" alt="Seismic Map">
 <p>Events:</p>
 <p id="event_list"></p>
 </body>
