@@ -51,8 +51,8 @@ The application uses a **Flask backend** to process data and generate interactiv
    ```
 2. Clone the repository:
    ```bash
-   git clone https://github.com/TrynaThinkOf1/GASAWA.git
-   cd GASAWA
+   git clone https://github.com/TrynaThinkOf1/TerraMetrics.git
+   cd TerraMetrics
    ```
 3. Install dependancies:
     ```bash
