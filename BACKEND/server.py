@@ -2,7 +2,6 @@ from flask import Flask, render_template, send_file, request, redirect
 from os import path
 
 import _mailman
-from BACKEND import _seismic
 
 type_map = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7}
 
