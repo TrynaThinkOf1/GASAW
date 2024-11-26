@@ -44,17 +44,21 @@ The application uses a **Flask backend** to process data and generate interactiv
 ---
 
 ## Installation
-
-1. Clone the repository:
+1. Enter Virtual Environment:
+   ```bash
+   python3 -m venv GASAWA
+   source GASAWA/bin/activate
+   ```
+2. Clone the repository:
    ```bash
    git clone https://github.com/TrynaThinkOf1/GASAWA
    ```
-2. Install dependancies:
+3. Install dependancies:
     ```bash
    pip install -r requirements.txt
     ```
-3. Run the server:
+4. Run the server:
     ```bash
    python3 BACKEND/server.py
    ```
-4. Navigate to `http://127.0.0.1:5000/`
+5. Navigate to `http://127.0.0.1:5000/`
