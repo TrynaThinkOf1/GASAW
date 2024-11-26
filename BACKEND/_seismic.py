@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from obspy.clients.fdsn import Client
 import cartopy.crs as ccrs
 import cartopy.feature as cfeat
+from datetime import date
+from io import BytesIO
 
 from time import sleep
 import ssl
@@ -15,13 +17,13 @@ def main():
     while True:
         fetch()
         plot()
-        sleep(300)
+        sleep(120)
 
 def fetch(min_mag=5.0):
     global eventData
 
     try:
-        catalog = client.get_events(starttime="2024-11-24", minmagnitude=min_mag)
+        catalog = client.get_events(starttime=date.today(), minmagnitude=min_mag)
         for event in catalog:
             origin = event.origins[0]
             magnitude = event.magnitudes[0].mag
@@ -56,7 +58,12 @@ def plot():
                  transform=ccrs.PlateCarree())
 
     plt.title("Seismic Activity Map")
-    plt.show()
+
+    img = BytesIO()
+    plt.savefig(img, format='png', bbox_inches='tight')
+    img.seek(0)
+    plt.close()
+    return img
 
 
 if __name__ == "__main__":
