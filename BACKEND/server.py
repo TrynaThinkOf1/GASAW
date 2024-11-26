@@ -17,5 +17,9 @@ def seismic_plot():
     plot_img = _mailman.getSeismicPlot()
     return send_file(plot_img, mimetype='image/png')
 
+@app.route("/seismic")
+def seismic():
+    return render_template("seismic.html")
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

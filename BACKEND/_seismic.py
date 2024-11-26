@@ -17,9 +17,9 @@ def main():
     while True:
         fetch()
         plot()
-        sleep(120)
+        sleep(30)
 
-def fetch(min_mag=5.0):
+def fetch(min_mag=3.0):
     global eventData
 
     try:
@@ -51,6 +51,8 @@ def plot():
     ax.add_feature(cfeat.BORDERS, linestyle=':')
     ax.gridlines(draw_labels=True)
 
+    ax.set_extent([-180, 180, -90, 90], crs=ccrs.PlateCarree())
+
     for event_id, event in eventData.items():
         lat, lon, mag = event["latitude"], event["longitude"], event["magnitude"]
         plt.plot(lon, lat, 'ro', transform=ccrs.PlateCarree())
@@ -62,7 +64,6 @@ def plot():
     img = BytesIO()
     plt.savefig(img, format='png', bbox_inches='tight')
     img.seek(0)
-    plt.close()
     return img
 
 
