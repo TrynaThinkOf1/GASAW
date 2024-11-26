@@ -32,22 +32,21 @@
 
     <script>
         function refreshSeismicMap() {
-    const img = document.querySelector("img");
-    const loadingIndicator = document.createElement("div");
-    loadingIndicator.textContent = "Loading...";
-    loadingIndicator.className = "loading";
-    document.body.appendChild(loadingIndicator);
+            const img = document.querySelector("img");
+            const loadingIndicator = document.createElement("div");
+            loadingIndicator.textContent = "Loading...";
+            loadingIndicator.className = "loading";
+            document.body.appendChild(loadingIndicator);
 
-    img.onload = () => {
-        document.body.removeChild(loadingIndicator);
-    };
+            img.onload = () => {
+                document.body.removeChild(loadingIndicator);
+            };
 
-    const baseUrl = "/seismic_plot";
-    img.src = `${baseUrl}?nocache=${Date.now()}`;
-}
+            const baseUrl = "/seismic_plot";
+            img.src = `${baseUrl}?nocache=${Date.now()}`;
+        }
 
-setInterval(refreshSeismicMap, 30000);
-
+        setInterval(refreshSeismicMap, 30000);
     </script>
 </body>
 </html>
